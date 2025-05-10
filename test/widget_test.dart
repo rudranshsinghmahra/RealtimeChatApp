@@ -7,13 +7,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:realtime_chat_app/features/auth/data/datasource/auth_remote_data_sources.dart';
+import 'package:realtime_chat_app/features/auth/data/repositories/auth_repository_implementation.dart';
 
 import 'package:realtime_chat_app/main.dart';
 
 void main() {
+  final authRepositoryImplementation = AuthRepositoryImplementation(
+    authRemoteDataSource: AuthRemoteDataSource(),
+  );
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(authRepositoryImplementation: authRepositoryImplementation,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
