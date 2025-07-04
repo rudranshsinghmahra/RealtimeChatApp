@@ -2,4 +2,6 @@ import 'package:realtime_chat_app/features/conversations/domain/entities/convers
 
 abstract class ConversationRepository {
   Future<List<ConversationEntity>> fetchConversation();
+
+  Future<String> checkOrCreateConversations({required String contactId});
 }

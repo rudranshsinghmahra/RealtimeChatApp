@@ -67,7 +67,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 listener: (context, state) {
                   if (state is AuthSuccess) {
-                    Navigator.pushNamed(context, '/chatScreen');
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/conversation',
+                      (route) => false,
+                    );
                   } else if (state is AuthFailure) {
                     ScaffoldMessenger.of(
                       context,

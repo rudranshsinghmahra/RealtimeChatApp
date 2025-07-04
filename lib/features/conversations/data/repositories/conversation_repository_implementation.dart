@@ -3,12 +3,21 @@ import 'package:realtime_chat_app/features/conversations/domain/entities/convers
 import 'package:realtime_chat_app/features/conversations/domain/repositories/conversation_repository.dart';
 
 class ConversationRepositoryImplementation implements ConversationRepository {
-  final ConversationRemoteDataSource remoteDataSource;
+  final ConversationRemoteDataSource conversationRemoteDataSource;
 
-  ConversationRepositoryImplementation({required this.remoteDataSource});
+  ConversationRepositoryImplementation({
+    required this.conversationRemoteDataSource,
+  });
 
   @override
   Future<List<ConversationEntity>> fetchConversation() async {
-    return await remoteDataSource.fetchConversation();
+    return await conversationRemoteDataSource.fetchConversation();
+  }
+
+  @override
+  Future<String> checkOrCreateConversations({required String contactId}) async {
+    return await conversationRemoteDataSource.checkOrCreateConversations(
+      contactId: contactId,
+    );
   }
 }

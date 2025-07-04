@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:realtime_chat_app/features/conversations/domain/usecases/fetch_conversation_use_case.dart';
-import 'package:realtime_chat_app/features/presentation/bloc/conversation_event.dart';
-import 'package:realtime_chat_app/features/presentation/bloc/conversation_state.dart';
+
+
+import 'conversation_event.dart';
+import 'conversation_state.dart';
 
 class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
   final FetchConversationUseCase fetchConversationsUseCase;
@@ -21,7 +23,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       final conversations = await fetchConversationsUseCase();
       emit(ConversationLoaded(conversations));
     } catch (e) {
-      emit(ConversationError("Failed to load conversations"));
+      emit(ConversationError("Failed to load conversations $e"));
     }
   }
 }
