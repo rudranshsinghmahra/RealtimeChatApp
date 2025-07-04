@@ -26,10 +26,10 @@ class _ContactScreenState extends State<ContactScreen> {
       child: Scaffold(
         appBar: AppBar(title: Text("Contacts")),
         body: BlocListener<ContactsBloc, ContactsState>(
-          listener: (context, state) {
+          listener: (context, state) async {
+            final contactsBloc = BlocProvider.of<ContactsBloc>(context);
             if (state is ConversationReady) {
-              Navigator.pop(context);
-              Navigator.push(
+              var res = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder:
@@ -39,6 +39,9 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                 ),
               );
+              if (res == null) {
+                contactsBloc.add(FetchContacts());
+              }
             }
           },
           child: BlocBuilder<ContactsBloc, ContactsState>(

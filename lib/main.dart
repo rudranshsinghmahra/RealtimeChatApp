@@ -29,6 +29,9 @@ import 'package:realtime_chat_app/views/register_screen.dart';
 import 'features/conversations/presentation/bloc/conversation_bloc.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final socketServices = SocketServices();
+  await socketServices.initSocket();
   final authRepositoryImplementation = AuthRepositoryImplementation(
     authRemoteDataSource: AuthRemoteDataSource(),
   );
