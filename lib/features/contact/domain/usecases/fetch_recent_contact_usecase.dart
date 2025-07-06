@@ -1,12 +1,12 @@
 import '../entities/contact_entity.dart';
 import '../repositories/contact_repository.dart';
 
-class FetchContactUseCases {
+class FetchRecentContactUseCase {
   final ContactRepository contactRepository;
 
-  FetchContactUseCases({required this.contactRepository});
+  FetchRecentContactUseCase({required this.contactRepository});
 
   Future<List<ContactEntity>> call() async {
-    return await contactRepository.fetchRecentContacts();
+    return await contactRepository.fetchContact();
   }
 }

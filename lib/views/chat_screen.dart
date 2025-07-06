@@ -11,10 +11,12 @@ class ChatScreen extends StatefulWidget {
     super.key,
     required this.conversationId,
     required this.mate,
+    required this.profileImage,
   });
 
   final String conversationId;
   final String mate;
+  final String profileImage;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -24,6 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController messageController = TextEditingController();
   final storage = FlutterSecureStorage();
   String userId = '';
+  String botId = '00000000-0000-0000-0000-000000000000';
 
   @override
   void initState() {
@@ -64,11 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
         appBar: AppBar(
           title: Row(
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-                ),
-              ),
+              CircleAvatar(backgroundImage: NetworkImage(widget.profileImage)),
               SizedBox(width: 10),
               Text(widget.mate),
             ],
@@ -89,9 +88,15 @@ class _ChatScreenState extends State<ChatScreen> {
                       itemCount: state.messages.length,
                       itemBuilder: (context, index) {
                         final message = state.messages[index];
+                        final isDailyQuestion = message.senderId == botId;
                         final isSentMessage = message.senderId == userId;
                         if (isSentMessage) {
                           return _buildSentMessage(context, message.content);
+                        } else if (isDailyQuestion) {
+                          return _buildDailyQuestionMessage(
+                            context,
+                            message.content,
+                          );
                         } else {
                           return _buildReceivedMessage(
                             context,
@@ -125,6 +130,21 @@ class _ChatScreenState extends State<ChatScreen> {
           color: Colors.grey.shade300,
         ),
         child: Text(message),
+      ),
+    );
+  }
+
+  Widget _buildDailyQuestionMessage(BuildContext context, String message) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 18),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.grey.shade300,
+        ),
+        child: Text("🧠 Daily Questions: $message"),
       ),
     );
   }

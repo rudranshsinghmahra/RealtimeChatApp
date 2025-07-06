@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:realtime_chat_app/features/contact/presentation/bloc/contact_bloc.dart';
+import 'package:realtime_chat_app/features/contact/presentation/bloc/contact_state.dart';
 import 'package:realtime_chat_app/views/chat_screen.dart';
 
+import '../features/contact/presentation/bloc/contact_event.dart';
 import '../features/conversations/presentation/bloc/conversation_bloc.dart';
 import '../features/conversations/presentation/bloc/conversation_event.dart';
 import '../features/conversations/presentation/bloc/conversation_state.dart';
@@ -19,6 +23,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<ConversationBloc>(context).add(FetchConversation());
+    BlocProvider.of<ContactsBloc>(context).add(LoadRecentContact());
   }
 
   @override
@@ -33,22 +38,48 @@ class _ConversationScreenState extends State<ConversationScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Text("Recent"),
-          ),
-          Container(
+          SizedBox(
             height: 100,
-            padding: EdgeInsets.all(5),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildRecentContact("Barry"),
-                _buildRecentContact("Perez"),
-                _buildRecentContact("Alvin"),
-                _buildRecentContact("Dan"),
-                _buildRecentContact("Frank"),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: BlocBuilder<ContactsBloc, ContactsState>(
+                builder: (context, state) {
+                  if (state is RecentContactLoaded) {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.recentContacts.length,
+                      itemBuilder: (context, index) {
+                        final recentContacts = state.recentContacts[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                    ChatScreen(
+                                      conversationId: recentContacts.id,
+                                      mate: recentContacts.username,
+                                      profileImage: recentContacts.profileImage,
+                                    ),
+                              ),
+                            );
+                          },
+                          child: _buildRecentContact(
+                            name: recentContacts.username,
+                            profileImage: recentContacts.profileImage,
+                          ),
+                        );
+                      },
+                    );
+                  } else if (state is ContactsLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is ContactsError) {
+                    return Center(child: Text(state.message));
+                  }
+                  return Center(child: Text("No recent contact found"));
+                },
+              ),
             ),
           ),
           SizedBox(height: 10),
@@ -79,12 +110,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                     (context) => ChatScreen(
                                       conversationId: conversation.id,
                                       mate: conversation.participantName,
+                                      profileImage:
+                                      conversation.participantImage,
                                     ),
                               ),
                             );
                           },
                           child: _buildMessageTile(
                             conversation.participantName,
+                            conversation.participantImage,
                             conversation.lastMessage,
                             conversation.lastMessageTime.toString(),
                           ),
@@ -102,42 +136,55 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final contactBloc = BlocProvider.of<ContactsBloc>(context);
+          var res = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => ContactScreen()),
           );
+          if (res == null) {
+            contactBloc.add(LoadRecentContact());
+          }
         },
         child: Icon(Icons.contacts),
       ),
     );
   }
 
-  Widget _buildMessageTile(String name, String message, String time) {
+  Widget _buildMessageTile(String name,
+      String participantImage,
+      String message,
+      String time,) {
+    final dateTime = DateTime.parse(time);
+    final formattedTime = DateFormat.jm().format(dateTime);
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       leading: CircleAvatar(
         radius: 30,
-        backgroundImage: NetworkImage(
-          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-        ),
+        backgroundImage: NetworkImage(participantImage),
       ),
       title: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(message, style: TextStyle(color: Colors.grey)),
-      trailing: Text(time, style: TextStyle(color: Colors.grey)),
+      subtitle: Text(
+        message,
+        style: TextStyle(color: Colors.grey),
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      ),
+      trailing: Text(formattedTime, style: TextStyle(color: Colors.grey)),
     );
   }
 
-  Widget _buildRecentContact(String name) {
+  Widget _buildRecentContact({
+    required String name,
+    required String profileImage,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
           CircleAvatar(
             radius: 30,
-            backgroundImage: NetworkImage(
-              'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-            ),
+            backgroundImage: NetworkImage(profileImage),
           ),
           SizedBox(height: 5),
           Text(name),

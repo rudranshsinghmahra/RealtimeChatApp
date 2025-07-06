@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:realtime_chat_app/core/socket_services.dart';
 import 'package:realtime_chat_app/features/conversations/domain/usecases/fetch_conversation_use_case.dart';
@@ -12,6 +13,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
   ConversationBloc({required this.fetchConversationsUseCase})
     : super(ConversationInitial()) {
     on<FetchConversation>(_onFetchConversation);
+
     _initializeSocketListeners();
   }
 

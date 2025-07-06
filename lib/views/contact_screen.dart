@@ -35,7 +35,8 @@ class _ContactScreenState extends State<ContactScreen> {
                   builder:
                       (context) => ChatScreen(
                         conversationId: state.conversationId,
-                        mate: state.contactName,
+                        mate: state.contact.username,
+                        profileImage: state.contact.profileImage,
                       ),
                 ),
               );
@@ -58,12 +59,9 @@ class _ContactScreenState extends State<ContactScreen> {
                       subtitle: Text(contact.email),
                       onTap: () {
                         // Navigator.pop(context, contact);
-                        BlocProvider.of<ContactsBloc>(context).add(
-                          CheckOrCreateConversation(
-                            contact.id,
-                            contact.username,
-                          ),
-                        );
+                        BlocProvider.of<ContactsBloc>(
+                          context,
+                        ).add(CheckOrCreateConversation(contact.id, contact));
                       },
                     );
                   },

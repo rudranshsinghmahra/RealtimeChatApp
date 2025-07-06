@@ -7,19 +7,24 @@ import 'package:realtime_chat_app/features/contact/presentation/bloc/contact_eve
 import 'package:realtime_chat_app/features/contact/presentation/bloc/contact_state.dart';
 import 'package:realtime_chat_app/features/conversations/domain/usecases/check_or_create_conversations_usecase.dart';
 
+import '../../domain/usecases/fetch_recent_contact_usecase.dart';
+
 class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   final FetchContactUseCases fetchContactUseCases;
   final AddContactUseCase addContactUseCase;
   final CheckOrCreateConversationUseCase checkOrCreateConversationUseCase;
+  final FetchRecentContactUseCase fetchRecentContactUseCase;
 
   ContactsBloc({
     required this.fetchContactUseCases,
     required this.addContactUseCase,
     required this.checkOrCreateConversationUseCase,
+    required this.fetchRecentContactUseCase,
   }) : super(ContactsInitial()) {
     on<FetchContacts>(_onFetchContacts);
     on<AddContact>(_onAddContacts);
     on<CheckOrCreateConversation>(_onCheckOrCreateConversations);
+    on<LoadRecentContact>(_onLoadRecentContactEvent);
   }
 
   FutureOr<void> _onFetchContacts(
@@ -59,11 +64,23 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       emit(
         ConversationReady(
           conversationId: conversationId,
-          contactName: event.contactName,
+          contact: event.contact,
         ),
       );
     } catch (error) {
       emit(ContactsError("Failed to start conversations $error"));
     }
   }
+
+  FutureOr<void> _onLoadRecentContactEvent(LoadRecentContact event,
+      Emitter<ContactsState> emit) async {
+    emit(ContactsLoading());
+    try {
+      final recentContacts = await fetchRecentContactUseCase();
+      emit(RecentContactLoaded(recentContacts));
+    } catch (error) {
+      print("Error occurred failed to load conversations $error");
+    }
+  }
+
 }

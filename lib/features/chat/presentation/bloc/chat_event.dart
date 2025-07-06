@@ -18,3 +18,9 @@ class ReceiveMessagesEvent extends ChatEvent {
 
   ReceiveMessagesEvent(this.message);
 }
+
+class LoadDailyQuestionEvent extends ChatEvent {
+  final String conversationId;
+
+  LoadDailyQuestionEvent({required this.conversationId});
+}
