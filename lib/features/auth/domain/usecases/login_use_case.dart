@@ -4,7 +4,7 @@ import 'package:realtime_chat_app/features/auth/domain/repositories/auth_reposit
 class LoginUseCase {
   final AuthRepository repository;
 
-  LoginUseCase(this.repository);
+  LoginUseCase({required this.repository});
 
   Future<UserEntity> call(String email, String password) {
     return repository.login(email, password);

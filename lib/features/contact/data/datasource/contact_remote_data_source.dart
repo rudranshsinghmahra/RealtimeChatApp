@@ -6,8 +6,11 @@ import 'package:http/http.dart';
 import '../models/contact_model.dart';
 
 class ContactRemoteDataSource {
-  final String baseUrl = 'http://192.168.1.35:4002';
+  // final String baseUrl = 'http://192.168.1.35:4002';
+  final String baseUrl;
   final _storage = FlutterSecureStorage();
+
+  ContactRemoteDataSource({required this.baseUrl});
 
   Future<List<ContactModel>> fetchContact() async {
     String token = await _storage.read(key: 'token') ?? '';

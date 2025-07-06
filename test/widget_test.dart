@@ -7,40 +7,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:realtime_chat_app/features/auth/data/datasource/auth_remote_data_sources.dart';
-import 'package:realtime_chat_app/features/auth/data/repositories/auth_repository_implementation.dart';
-import 'package:realtime_chat_app/features/chat/data/datasources/message_remote_data_source.dart';
-import 'package:realtime_chat_app/features/chat/data/repositories/message_repository_implementation.dart';
-import 'package:realtime_chat_app/features/contact/data/datasource/contact_remote_data_source.dart';
-import 'package:realtime_chat_app/features/contact/data/repositories/contact_repository_implementation.dart';
-import 'package:realtime_chat_app/features/conversations/data/datasources/conversation_remote_data_source.dart';
-import 'package:realtime_chat_app/features/conversations/data/repositories/conversation_repository_implementation.dart';
-
 import 'package:realtime_chat_app/main.dart';
 
 void main() {
-  final authRepositoryImplementation = AuthRepositoryImplementation(
-    authRemoteDataSource: AuthRemoteDataSource(),
-  );
-  final conversationRepositoryImplementation =
-      ConversationRepositoryImplementation(
-        conversationRemoteDataSource: ConversationRemoteDataSource(),
-      );
-  final messageRepository = MessageRepositoryImplementation(
-    remoteDataSource: MessageRemoteDataSource(),
-  );
-  final contactRepositoryImplementation = ContactRepositoryImplementation(
-    remoteDataSource: ContactRemoteDataSource(),
-  );
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(
       MyApp(
-        authRepositoryImplementation: authRepositoryImplementation,
-        conversationRepositoryImplementation:
-            conversationRepositoryImplementation,
-        messageRepositoryImplementation: messageRepository,
-        contactRepositoryImplementation: contactRepositoryImplementation,
       ),
     );
 

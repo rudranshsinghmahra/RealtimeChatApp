@@ -4,7 +4,7 @@ import 'package:realtime_chat_app/features/conversations/domain/repositories/con
 class FetchConversationUseCase {
   final ConversationRepository repository;
 
-  FetchConversationUseCase(this.repository);
+  FetchConversationUseCase({required this.repository});
 
   Future<List<ConversationEntity>> call() async {
     return repository.fetchConversation();

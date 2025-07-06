@@ -5,8 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:realtime_chat_app/features/conversations/data/models/conversation_model.dart';
 
 class ConversationRemoteDataSource {
-  final String baseUrl = 'http://192.168.1.35:4002';
+  // final String baseUrl = 'http://192.168.1.35:4002';
+  final String baseUrl;
   final _storage = FlutterSecureStorage();
+
+  ConversationRemoteDataSource({required this.baseUrl});
 
   Future<List<ConversationModel>> fetchConversation() async {
     String token = await _storage.read(key: 'token') ?? '';
