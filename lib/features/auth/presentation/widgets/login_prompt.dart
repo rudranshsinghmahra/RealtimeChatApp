@@ -20,9 +20,9 @@ class LoginPrompt extends StatelessWidget {
         child: RichText(
           text: TextSpan(
             text: title,
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: Colors.black),
             children: [
-              TextSpan(text: subTitle, style: TextStyle(color: Colors.blue)),
+              TextSpan(text: " $subTitle", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
             ],
           ),
         ),

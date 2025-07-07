@@ -38,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xfffdecc9),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -61,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
               BlocConsumer<AuthBloc, AuthState>(
                 builder: (context, state) {
                   if (state is AuthLoading) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator(color: Color(0xff8b3b11),));
                   }
                   return AuthButton(text: "Login", onPressed: _onLogin);
                 },

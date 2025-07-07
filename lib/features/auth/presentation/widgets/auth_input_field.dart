@@ -19,14 +19,19 @@ class AuthInputField extends StatelessWidget {
       children: [
         Expanded(
           child: TextField(
+            style: TextStyle(fontWeight: FontWeight.w400,color: Color(0xff8b3b11)),
             controller: controller,
             obscureText: isPassword,
             decoration: InputDecoration(
-              label: Icon(icon, color: Colors.grey),
+              label: Icon(icon, color: Color(0xff8b3b11)),
               hintText: hint,
-              hintStyle: TextStyle(color: Colors.grey),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+              hintStyle: TextStyle(color: Color(0xff8b3b11)),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xff8b3b11), width: 2.5),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xff8b3b11), width: 5),
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
